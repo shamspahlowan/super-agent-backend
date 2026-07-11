@@ -14,6 +14,8 @@ from app.simulation.generator import (
     BaselineSimulationGenerator,
 )
 
+from decimal import Decimal
+
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -110,7 +112,7 @@ def test_repeated_cluster_contains_expected_pattern() -> None:
 
     assert (
         max(amounts) - min(amounts)
-        <= max(amounts) * 0.04
+        <= max(amounts) * Decimal("0.04")
     )
 
 

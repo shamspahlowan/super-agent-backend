@@ -18,3 +18,4 @@ pytest
 pytest-asyncio
 ruff
 PyYAML
+openai==<2.45.0>

@@ -3,6 +3,7 @@ from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field, SecretStr
 
 
 class Settings(BaseSettings):
@@ -12,6 +13,27 @@ class Settings(BaseSettings):
     environment: str = "development"
     debug: bool = True
     api_v1_prefix: str = "/api/v1"
+
+
+    openai_api_key: SecretStr | None = None
+
+    openai_explanations_enabled: bool = True
+
+    openai_explanation_model: str = (
+        "gpt-5.6-terra"
+    )
+
+    openai_explanation_timeout_seconds: float = Field(
+        default=20,
+        gt=0,
+        le=120,
+    )
+
+    openai_explanation_max_output_tokens: int = Field(
+        default=900,
+        ge=200,
+        le=3000,
+    )
 
     # Database
     database_url: str = "sqlite:///./super_agent.db"

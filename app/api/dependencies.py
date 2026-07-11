@@ -15,6 +15,31 @@ from app.intelligence.anomaly_detection import (
 from app.intelligence.fusion import DecisionFusionEngine
 from app.cases.service import CaseCoordinationService
 
+from app.explanations.service import (
+    GroundedExplanationService,
+)
+
+def get_explanation_service(
+    request: Request,
+) -> GroundedExplanationService:
+    service = getattr(
+        request.app.state,
+        "explanation_service",
+        None,
+    )
+
+    if service is None:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_503_SERVICE_UNAVAILABLE
+            ),
+            detail=(
+                "Explanation service is not initialized."
+            ),
+        )
+
+    return service
+
 def get_case_service(
     request: Request,
 ) -> CaseCoordinationService:

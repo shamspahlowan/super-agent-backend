@@ -21,6 +21,13 @@ from app.intelligence.anomaly_detection import (
 from app.intelligence.fusion import DecisionFusionEngine
 from app.cases.service import CaseCoordinationService
 
+import logging
+
+from app.explanations.service import (
+    GroundedExplanationService,
+    OpenAIExplanationGenerator,
+)
+
 
 settings = get_settings()
 
@@ -82,6 +89,53 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     case_service = CaseCoordinationService()
 
+    explanation_generator = None
+
+    if (
+        settings.openai_explanations_enabled
+        and settings.openai_api_key is not None
+    ):
+        try:
+            explanation_generator = (
+                OpenAIExplanationGenerator(
+                    api_key=(
+                        settings.openai_api_key
+                        .get_secret_value()
+                    ),
+                    model=(
+                        settings
+                        .openai_explanation_model
+                    ),
+                    timeout_seconds=(
+                        settings
+                        .openai_explanation_timeout_seconds
+                    ),
+                    max_output_tokens=(
+                        settings
+                        .openai_explanation_max_output_tokens
+                    ),
+                )
+            )
+
+            logger.info(
+                "OpenAI explanation generator configured "
+                "with model=%s",
+                settings.openai_explanation_model,
+            )
+
+        except Exception:
+            logger.exception(
+                "OpenAI explanation initialization failed. "
+                "Template fallback will remain active."
+            )
+
+    explanation_service = GroundedExplanationService(
+        generator=explanation_generator,
+        enabled=(
+            settings.openai_explanations_enabled
+        ),
+    )
+
     replay_controller = ReplayController(
     events=replay_events,
     opening_balances=synthetic_bundle.opening_balances,
@@ -103,6 +157,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.fusion_engine = fusion_engine
     app.state.case_service = case_service
     app.state.replay_controller = replay_controller
+    app.state.explanation_service = (
+    explanation_service
+    )
 
     logger.info(
         "Replay initialized successfully: agents=%s, events=%s",

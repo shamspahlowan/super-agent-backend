@@ -8,6 +8,9 @@ from app.api.v1.incidents import router as incidents_router
 from app.api.v1.liquidity import router as liquidity_router
 from app.api.v1.replay import router as replay_router
 from app.api.v1.cases import router as cases_router
+from app.api.v1.explanations import (
+    router as explanations_router,
+)
 
 api_router = APIRouter()
 
@@ -19,3 +22,6 @@ api_router.include_router(liquidity_router)
 api_router.include_router(anomalies_router)
 api_router.include_router(incidents_router)
 api_router.include_router(cases_router)
+api_router.include_router(
+    explanations_router
+)
