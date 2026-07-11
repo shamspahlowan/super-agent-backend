@@ -1,6 +1,7 @@
 from fastapi import HTTPException, Request, status
 
 from app.ledger.balance_engine import BalanceEngine
+from app.replay.controller import ReplayController
 
 
 def get_balance_engine(
@@ -19,3 +20,39 @@ def get_balance_engine(
         )
 
     return ledger
+
+
+def get_balance_engine(
+    request: Request,
+) -> BalanceEngine:
+    engine = getattr(
+        request.app.state,
+        "balance_engine",
+        None,
+    )
+
+    if engine is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Balance engine is not initialized.",
+        )
+
+    return engine
+
+
+def get_replay_controller(
+    request: Request,
+) -> ReplayController:
+    controller = getattr(
+        request.app.state,
+        "replay_controller",
+        None,
+    )
+
+    if controller is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Replay controller is not initialized.",
+        )
+
+    return controller

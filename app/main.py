@@ -10,7 +10,9 @@ from app.core.logging import configure_logging, get_logger
 from app.db.base import Base
 from app.db.session import engine
 from app.ledger.balance_engine import BalanceEngine
+from app.replay.controller import ReplayController
 from app.replay.loader import SyntheticDataLoader
+
 
 settings = get_settings()
 
@@ -30,20 +32,26 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     synthetic_bundle = data_loader.load()
 
-    balance_engine = BalanceEngine(
-        synthetic_bundle.opening_balances
+    replay_events = data_loader.build_event_stream(
+        synthetic_bundle
+    )
+
+    balance_engine = BalanceEngine()
+
+    replay_controller = ReplayController(
+        events=replay_events,
+        opening_balances=synthetic_bundle.opening_balances,
+        balance_engine=balance_engine,
     )
 
     app.state.synthetic_bundle = synthetic_bundle
     app.state.balance_engine = balance_engine
-    app.state.replay_events = data_loader.build_event_stream(
-        synthetic_bundle
-    )
+    app.state.replay_controller = replay_controller
 
     logger.info(
-        "Balance ledger initialized: agents=%s, transactions=%s",
+        "Replay initialized successfully: agents=%s, events=%s",
         len(synthetic_bundle.agents),
-        len(synthetic_bundle.transactions),
+        len(replay_events),
     )
 
     yield
@@ -55,9 +63,8 @@ app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     description=(
-        "Provider-aware decision-support API for shared-cash liquidity, "
-        "provider-specific e-money pressure, unusual-activity review, "
-        "data-quality uncertainty, replay, and case coordination."
+        "Provider-aware decision-support API for liquidity, "
+        "unusual activity, data quality and case coordination."
     ),
     debug=settings.debug,
     lifespan=lifespan,
