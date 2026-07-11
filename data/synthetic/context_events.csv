@@ -1,0 +1,2 @@
+context_id,area,event_type,start_time,end_time,expected_demand_multiplier,description
+CTX-001,Zindabazar,EID_MARKET_SURGE,2026-06-20T14:45:00+06:00,2026-06-20T16:00:00+06:00,2.5,Expected pre-Eid demand increase involving many unrelated customers.

@@ -1,0 +1,37 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python Bytecode & Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment Variables & Secrets (CRITICAL)
+.env
+*.env
+.env.development
+.env.production
+.secrets
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Project Specific (Optional)
+# Remove the hash if you generate automated API docs or build artifacts
+dist/
+build/
+*.log

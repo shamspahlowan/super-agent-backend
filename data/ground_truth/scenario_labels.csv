@@ -1,0 +1,49 @@
+record_type,record_id,scenario_id,expected_category,expected_positive,details
+TRANSACTION,TXN-000253,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000254,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000255,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000256,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000257,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000258,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000259,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000260,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000261,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000262,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000263,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000264,S2,PROVIDER_LIQUIDITY_PRESSURE,1,Repeated bKash cash-in demand should deplete provider e-money while shared physical cash remains healthy.
+TRANSACTION,TXN-000265,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000266,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000267,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000268,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000269,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000270,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000271,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000272,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000273,S3,REQUIRES_REVIEW,1,Near-identical cash-out amounts from a small group of repeating accounts while shared cash is falling.
+TRANSACTION,TXN-000274,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000275,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000276,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000277,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000278,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000279,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000280,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000281,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000282,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000283,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000284,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000285,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000286,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000287,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000288,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000289,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000290,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000291,S5,LEGITIMATE_DEMAND_SPIKE,0,"Broad Eid demand involving many accounts, providers and varied amounts. It should not be treated as fraud."
+TRANSACTION,TXN-000292,S7,CROSS_PROVIDER_REVIEW,1,Related synthetic identifier shows similar high-value activity across two logically separate providers.
+TRANSACTION,TXN-000293,S7,CROSS_PROVIDER_REVIEW,1,Related synthetic identifier shows similar high-value activity across two logically separate providers.
+TRANSACTION,TXN-000294,S7,CROSS_PROVIDER_REVIEW,1,Related synthetic identifier shows similar high-value activity across two logically separate providers.
+TRANSACTION,TXN-000295,S7,CROSS_PROVIDER_REVIEW,1,Related synthetic identifier shows similar high-value activity across two logically separate providers.
+TRANSACTION,TXN-000296,S7,CROSS_PROVIDER_REVIEW,1,Related synthetic identifier shows similar high-value activity across two logically separate providers.
+TRANSACTION,TXN-000297,S7,CROSS_PROVIDER_REVIEW,1,Related synthetic identifier shows similar high-value activity across two logically separate providers.
+FEED_EVENT,FEED-00503,S4,DATA_QUALITY_ISSUE,1,Rocket feed becomes stale. The system should reduce confidence and avoid strong recommendations.
+FEED_EVENT,FEED-00504,S4,DATA_QUALITY_RECOVERY,1,Provider feed becomes available again.
+FEED_EVENT,FEED-00505,S6,DATA_QUALITY_ISSUE,1,Reported provider balance conflicts with the balance calculated from opening balance and transaction deltas.

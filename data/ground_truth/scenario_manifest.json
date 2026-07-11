@@ -1,0 +1,49 @@
+{
+  "seed": 20260711,
+  "simulation_start": "2026-06-20T09:00:00+06:00",
+  "simulation_end": "2026-06-20T18:00:00+06:00",
+  "scenarios": [
+    {
+      "scenario_id": "S2",
+      "name": "Hidden provider shortage",
+      "agent_id": "AG002",
+      "provider_id": "BKASH",
+      "expected_outcome": "provider_liquidity_pressure"
+    },
+    {
+      "scenario_id": "S3",
+      "name": "Liquidity pressure with unusual activity",
+      "agent_id": "AG003",
+      "provider_id": "NAGAD",
+      "expected_outcome": "combined_priority_case"
+    },
+    {
+      "scenario_id": "S4",
+      "name": "Delayed provider feed",
+      "agent_id": "AG005",
+      "provider_id": "ROCKET",
+      "expected_outcome": "insufficient_data"
+    },
+    {
+      "scenario_id": "S5",
+      "name": "Legitimate Eid demand spike",
+      "agent_id": "AG004",
+      "provider_id": "MULTIPLE",
+      "expected_outcome": "demand_spike_not_fraud"
+    },
+    {
+      "scenario_id": "S6",
+      "name": "Conflicting provider balance",
+      "agent_id": "AG006",
+      "provider_id": "BKASH",
+      "expected_outcome": "data_quality_issue"
+    },
+    {
+      "scenario_id": "S7",
+      "name": "Privacy-safe cross-provider pattern",
+      "agent_id": "AG001",
+      "provider_id": "BKASH,NAGAD",
+      "expected_outcome": "requires_human_review"
+    }
+  ]
+}
