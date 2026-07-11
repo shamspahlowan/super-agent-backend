@@ -1,0 +1,2 @@
+context_id,area,event_type,start_time,end_time,expected_demand_multiplier,description
+CTX-000001,Chowhatta,EID_MARKET_SURGE,2026-06-20T14:30:00+06:00,2026-06-20T15:00:00+06:00,2.8,Known local Eid market demand event. Activity should remain broadly distributed.
