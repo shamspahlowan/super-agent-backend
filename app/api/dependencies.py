@@ -8,6 +8,27 @@ from app.intelligence.liquidity_forecast import (
     LiquidityForecastEngine,
 )
 
+from app.intelligence.anomaly_detection import (
+    AnomalyDetectionEngine,
+)
+
+def get_anomaly_engine(
+    request: Request,
+) -> AnomalyDetectionEngine:
+    engine = getattr(
+        request.app.state,
+        "anomaly_engine",
+        None,
+    )
+
+    if engine is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Anomaly detection engine is not initialized.",
+        )
+
+    return engine
+
 def get_liquidity_engine(
     request: Request,
 ) -> LiquidityForecastEngine:

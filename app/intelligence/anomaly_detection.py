@@ -331,11 +331,33 @@ class AnomalyDetectionEngine:
             )
 
         # 3. Concentration among a small account group
+        # Focus on transactions matching the repeated-amount pattern
+        repeated_txns = [
+            transaction
+            for transaction in successful
+            if transaction.transaction_id
+            in repeated_transaction_ids
+        ]
+
+        repeated_account_counts = Counter(
+            transaction.account_id
+            for transaction in repeated_txns
+        ) if repeated_txns else Counter()
+
+        repeated_unique_accounts = len(repeated_account_counts)
+
+        repeated_dominant_ratio = (
+            max(repeated_account_counts.values())
+            / len(repeated_txns)
+            if repeated_txns
+            else 0
+        )
+
         concentrated_accounts = (
-            successful_count >= self.minimum_transactions
+            len(repeated_txns) >= self.minimum_transactions
             and (
-                unique_accounts <= 3
-                or dominant_account_ratio >= 0.50
+                repeated_unique_accounts <= 3
+                or repeated_dominant_ratio >= 0.50
             )
         )
 
@@ -345,12 +367,12 @@ class AnomalyDetectionEngine:
 
             concentrated_ids = [
                 transaction.transaction_id
-                for transaction in successful
+                for transaction in repeated_txns
                 if transaction.account_id
                 in {
                     account_id
                     for account_id, _ in
-                    account_counts.most_common(3)
+                    repeated_account_counts.most_common(3)
                 }
             ]
 
@@ -363,9 +385,9 @@ class AnomalyDetectionEngine:
                         "a small number of accounts."
                     ),
                     value=(
-                        f"unique_accounts={unique_accounts}, "
+                        f"unique_accounts={repeated_unique_accounts}, "
                         f"dominant_ratio="
-                        f"{dominant_account_ratio:.2f}"
+                        f"{repeated_dominant_ratio:.2f}"
                     ),
                     transaction_ids=concentrated_ids[:20],
                 )

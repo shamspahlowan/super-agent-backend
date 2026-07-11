@@ -24,6 +24,19 @@ from app.intelligence.liquidity_forecast import (
     LiquidityForecastEngine,
 )
 
+from app.ingestion.canonical_event import (
+    AgentRecord,
+    ContextEvent,
+    FeedEvent,
+    ReplayEvent,
+    ReplayEventType,
+    TransactionEvent,
+)
+
+from app.intelligence.anomaly_detection import (
+    AnomalyDetectionEngine,
+)
+
 class ReplayControllerError(RuntimeError):
     """Base replay-controller error."""
 
@@ -41,6 +54,9 @@ class ReplayController:
         balance_engine: BalanceEngine,
         feed_health_engine: FeedHealthEngine | None = None,
         liquidity_engine: LiquidityForecastEngine | None = None,
+        anomaly_engine: AnomalyDetectionEngine | None = None,
+        agents: list[AgentRecord] | None = None,
+        context_events: list[ContextEvent] | None = None,
         recent_event_limit: int = 100,
     ) -> None:
         if not events:
@@ -62,6 +78,15 @@ class ReplayController:
         self._balance_engine = balance_engine
         self._feed_health_engine = feed_health_engine
         self._liquidity_engine = liquidity_engine
+
+        self._anomaly_engine = anomaly_engine
+        self._agents = list(agents or [])
+        self._context_events = list(context_events or [])
+
+        if self._anomaly_engine is not None and not self._agents:
+            raise ReplayControllerError(
+                "Agents are required when anomaly detection is enabled."
+            )
 
         self._recent_events: deque[ProcessedReplayEvent] = deque(
             maxlen=recent_event_limit
@@ -97,6 +122,12 @@ class ReplayController:
             if self._liquidity_engine is not None:
                 self._liquidity_engine.initialize(
                     self._opening_balances
+                )
+
+            if self._anomaly_engine is not None:
+                self._anomaly_engine.initialize(
+                    agents=self._agents,
+                    context_events=self._context_events,
                 )
 
             self._current_index = 0
@@ -282,6 +313,11 @@ class ReplayController:
 
         if self._liquidity_engine is not None:
             self._liquidity_engine.record_transaction(
+                transaction
+            )
+
+        if self._anomaly_engine is not None:
+            self._anomaly_engine.record_transaction(
                 transaction
             )
 

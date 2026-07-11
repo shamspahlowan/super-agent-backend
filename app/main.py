@@ -15,6 +15,10 @@ from app.replay.controller import ReplayController
 from app.replay.loader import SyntheticDataLoader
 from app.data_quality.trust_score import FeedHealthEngine
 
+from app.intelligence.anomaly_detection import (
+    AnomalyDetectionEngine,
+)
+
 
 settings = get_settings()
 
@@ -55,21 +59,36 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     watch_minutes=settings.liquidity_watch_minutes,
     critical_minutes=settings.liquidity_critical_minutes,
     min_successful_transactions=3,
-)
+    )
+
+    anomaly_engine = AnomalyDetectionEngine(
+    window_minutes=settings.anomaly_window_minutes,
+    baseline_minutes=settings.anomaly_baseline_minutes,
+    minimum_transactions=settings.anomaly_min_transactions,
+    amount_tolerance_percent=(
+        settings.anomaly_amount_tolerance_percent
+    ),
+    medium_threshold=settings.anomaly_medium_threshold,
+    high_threshold=settings.anomaly_high_threshold,
+    )
 
     replay_controller = ReplayController(
-        events=replay_events,
-        opening_balances=synthetic_bundle.opening_balances,
-        balance_engine=balance_engine,
-        feed_health_engine=feed_health_engine,
-        liquidity_engine=liquidity_engine,
+    events=replay_events,
+    opening_balances=synthetic_bundle.opening_balances,
+    balance_engine=balance_engine,
+    feed_health_engine=feed_health_engine,
+    liquidity_engine=liquidity_engine,
+    anomaly_engine=anomaly_engine,
+    agents=synthetic_bundle.agents,
+    context_events=synthetic_bundle.context_events,
     )
 
     app.state.synthetic_bundle = synthetic_bundle
     app.state.balance_engine = balance_engine
-    app.state.replay_controller = replay_controller
+    app.state.anomaly_engine = anomaly_engine
     app.state.feed_health_engine = feed_health_engine
     app.state.liquidity_engine = liquidity_engine
+    app.state.replay_controller = replay_controller
 
     logger.info(
         "Replay initialized successfully: agents=%s, events=%s",
