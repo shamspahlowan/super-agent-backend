@@ -12,6 +12,25 @@ from app.intelligence.anomaly_detection import (
     AnomalyDetectionEngine,
 )
 
+from app.intelligence.fusion import DecisionFusionEngine
+
+def get_fusion_engine(
+    request: Request,
+) -> DecisionFusionEngine:
+    engine = getattr(
+        request.app.state,
+        "fusion_engine",
+        None,
+    )
+
+    if engine is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Decision-fusion engine is not initialized.",
+        )
+
+    return engine
+
 def get_anomaly_engine(
     request: Request,
 ) -> AnomalyDetectionEngine:

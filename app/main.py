@@ -18,6 +18,8 @@ from app.data_quality.trust_score import FeedHealthEngine
 from app.intelligence.anomaly_detection import (
     AnomalyDetectionEngine,
 )
+from app.intelligence.fusion import DecisionFusionEngine
+
 
 
 settings = get_settings()
@@ -72,6 +74,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     high_threshold=settings.anomaly_high_threshold,
     )
 
+    fusion_engine = DecisionFusionEngine(
+    liquidity_engine=liquidity_engine,
+    anomaly_engine=anomaly_engine,
+    feed_health_engine=feed_health_engine,
+    )
+
     replay_controller = ReplayController(
     events=replay_events,
     opening_balances=synthetic_bundle.opening_balances,
@@ -79,6 +87,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     feed_health_engine=feed_health_engine,
     liquidity_engine=liquidity_engine,
     anomaly_engine=anomaly_engine,
+    fusion_engine=fusion_engine,
     agents=synthetic_bundle.agents,
     context_events=synthetic_bundle.context_events,
     )
@@ -88,6 +97,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.anomaly_engine = anomaly_engine
     app.state.feed_health_engine = feed_health_engine
     app.state.liquidity_engine = liquidity_engine
+    app.state.fusion_engine = fusion_engine
     app.state.replay_controller = replay_controller
 
     logger.info(

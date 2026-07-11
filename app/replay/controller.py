@@ -37,6 +37,8 @@ from app.intelligence.anomaly_detection import (
     AnomalyDetectionEngine,
 )
 
+from app.intelligence.fusion import DecisionFusionEngine
+
 class ReplayControllerError(RuntimeError):
     """Base replay-controller error."""
 
@@ -55,6 +57,7 @@ class ReplayController:
         feed_health_engine: FeedHealthEngine | None = None,
         liquidity_engine: LiquidityForecastEngine | None = None,
         anomaly_engine: AnomalyDetectionEngine | None = None,
+        fusion_engine: DecisionFusionEngine | None = None,
         agents: list[AgentRecord] | None = None,
         context_events: list[ContextEvent] | None = None,
         recent_event_limit: int = 100,
@@ -80,12 +83,18 @@ class ReplayController:
         self._liquidity_engine = liquidity_engine
 
         self._anomaly_engine = anomaly_engine
+        self._fusion_engine = fusion_engine
         self._agents = list(agents or [])
         self._context_events = list(context_events or [])
 
         if self._anomaly_engine is not None and not self._agents:
             raise ReplayControllerError(
                 "Agents are required when anomaly detection is enabled."
+            )
+        
+        if self._fusion_engine is not None and not self._agents:
+            raise ReplayControllerError(
+                "Agents are required when decision fusion is enabled."
             )
 
         self._recent_events: deque[ProcessedReplayEvent] = deque(
@@ -109,6 +118,15 @@ class ReplayController:
 
         self.reset()
 
+
+    def _refresh_fusion_state(self) -> None:
+        if self._fusion_engine is None:
+            return
+
+        self._fusion_engine.refresh_all(
+            as_of=self._simulation_time,
+        )
+
     def reset(self) -> ReplayState:
         with self._lock:
             self._balance_engine.initialize(
@@ -128,6 +146,11 @@ class ReplayController:
                 self._anomaly_engine.initialize(
                     agents=self._agents,
                     context_events=self._context_events,
+                )
+
+            if self._fusion_engine is not None:
+                self._fusion_engine.initialize(
+                    self._agents
                 )
 
             self._current_index = 0
@@ -175,6 +198,7 @@ class ReplayController:
                 self._simulation_time = event.timestamp
 
             self._finish_batch()
+            self._refresh_fusion_state() # iguess this is create some problems
 
             return ReplayBatchResult(
                 state=self.get_state(),
@@ -220,6 +244,7 @@ class ReplayController:
 
             self._simulation_time = target_time
             self._finish_batch()
+            self._refresh_fusion_state() #again this is gonna break something probably
 
             return ReplayBatchResult(
                 state=self.get_state(),
