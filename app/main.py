@@ -9,6 +9,8 @@ from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.db.base import Base
 from app.db.session import engine
+from app.ledger.balance_engine import BalanceEngine
+from app.replay.loader import SyntheticDataLoader
 
 settings = get_settings()
 
@@ -17,12 +19,32 @@ logger = get_logger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("Starting %s", settings.app_name)
 
-    # Suitable for the hackathon development phase.
-    # Alembic migrations will replace this later.
     Base.metadata.create_all(bind=engine)
+
+    data_loader = SyntheticDataLoader(
+        settings.transactions_file.parent
+    )
+
+    synthetic_bundle = data_loader.load()
+
+    balance_engine = BalanceEngine(
+        synthetic_bundle.opening_balances
+    )
+
+    app.state.synthetic_bundle = synthetic_bundle
+    app.state.balance_engine = balance_engine
+    app.state.replay_events = data_loader.build_event_stream(
+        synthetic_bundle
+    )
+
+    logger.info(
+        "Balance ledger initialized: agents=%s, transactions=%s",
+        len(synthetic_bundle.agents),
+        len(synthetic_bundle.transactions),
+    )
 
     yield
 
