@@ -4,6 +4,26 @@ from app.ledger.balance_engine import BalanceEngine
 from app.replay.controller import ReplayController
 from app.data_quality.trust_score import FeedHealthEngine
 
+from app.intelligence.liquidity_forecast import (
+    LiquidityForecastEngine,
+)
+
+def get_liquidity_engine(
+    request: Request,
+) -> LiquidityForecastEngine:
+    engine = getattr(
+        request.app.state,
+        "liquidity_engine",
+        None,
+    )
+
+    if engine is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Liquidity forecasting engine is not initialized.",
+        )
+
+    return engine
 
 def get_balance_engine(
     request: Request,

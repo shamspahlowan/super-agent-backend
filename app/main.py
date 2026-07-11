@@ -9,6 +9,7 @@ from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.db.base import Base
 from app.db.session import engine
+from app.intelligence.liquidity_forecast import LiquidityForecastEngine
 from app.ledger.balance_engine import BalanceEngine
 from app.replay.controller import ReplayController
 from app.replay.loader import SyntheticDataLoader
@@ -44,16 +45,31 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     missing_minutes=settings.feed_missing_minutes,
     )
 
+    liquidity_engine = LiquidityForecastEngine(
+    balance_engine=balance_engine,
+    feed_health_engine=feed_health_engine,
+    lookback_minutes=settings.liquidity_lookback_minutes,
+    safety_buffer_percent=(
+        settings.liquidity_safety_buffer_percent
+    ),
+    watch_minutes=settings.liquidity_watch_minutes,
+    critical_minutes=settings.liquidity_critical_minutes,
+    min_successful_transactions=3,
+)
+
     replay_controller = ReplayController(
         events=replay_events,
         opening_balances=synthetic_bundle.opening_balances,
         balance_engine=balance_engine,
+        feed_health_engine=feed_health_engine,
+        liquidity_engine=liquidity_engine,
     )
 
     app.state.synthetic_bundle = synthetic_bundle
     app.state.balance_engine = balance_engine
     app.state.replay_controller = replay_controller
     app.state.feed_health_engine = feed_health_engine
+    app.state.liquidity_engine = liquidity_engine
 
     logger.info(
         "Replay initialized successfully: agents=%s, events=%s",

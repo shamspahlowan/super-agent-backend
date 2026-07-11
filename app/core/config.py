@@ -58,6 +58,28 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    anomaly_window_minutes: int = Field(default=15, gt=0)
+    anomaly_baseline_minutes: int = Field(default=180, gt=0)
+    anomaly_min_transactions: int = Field(default=6, gt=0)
+
+    anomaly_amount_tolerance_percent: float = Field(
+        default=2.0,
+        gt=0,
+        le=20,
+    )
+
+    anomaly_medium_threshold: int = Field(
+        default=40,
+        ge=0,
+        le=100,
+    )
+
+    anomaly_high_threshold: int = Field(
+        default=70,
+        ge=0,
+        le=100,
+    )
+
     @property
     def parsed_cors_origins(self) -> list[str]:
         return [

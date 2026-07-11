@@ -445,25 +445,24 @@ class BalanceEngine:
 
         return warnings
 
+    def get_provider_balance(
+        self,
+        agent_id: str,
+        provider_id: ProviderID,
+    ) -> Decimal:
+        with self._lock:
+            self._ensure_agent_exists(agent_id)
 
-def get_provider_balance(
-    self,
-    agent_id: str,
-    provider_id: ProviderID,
-) -> Decimal:
-    with self._lock:
-        self._ensure_agent_exists(agent_id)
-
-        key = (
-            agent_id,
-            provider_id,
-        )
-
-        if key not in self._provider_emoney:
-            raise UnknownProviderBalanceError(
-                "No provider balance exists for "
-                f"agent={agent_id}, "
-                f"provider={provider_id.value}."
+            key = (
+                agent_id,
+                provider_id,
             )
 
-        return self._provider_emoney[key]
+            if key not in self._provider_emoney:
+                raise UnknownProviderBalanceError(
+                    "No provider balance exists for "
+                    f"agent={agent_id}, "
+                    f"provider={provider_id.value}."
+                )
+
+            return self._provider_emoney[key]

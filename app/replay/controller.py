@@ -20,6 +20,10 @@ from app.schemas.replay import (
 )
 from app.data_quality.trust_score import FeedHealthEngine
 
+from app.intelligence.liquidity_forecast import (
+    LiquidityForecastEngine,
+)
+
 class ReplayControllerError(RuntimeError):
     """Base replay-controller error."""
 
@@ -36,6 +40,7 @@ class ReplayController:
         opening_balances,
         balance_engine: BalanceEngine,
         feed_health_engine: FeedHealthEngine | None = None,
+        liquidity_engine: LiquidityForecastEngine | None = None,
         recent_event_limit: int = 100,
     ) -> None:
         if not events:
@@ -56,6 +61,7 @@ class ReplayController:
         self._opening_balances = list(opening_balances)
         self._balance_engine = balance_engine
         self._feed_health_engine = feed_health_engine
+        self._liquidity_engine = liquidity_engine
 
         self._recent_events: deque[ProcessedReplayEvent] = deque(
             maxlen=recent_event_limit
@@ -85,6 +91,11 @@ class ReplayController:
             )
             if self._feed_health_engine is not None:
                 self._feed_health_engine.initialize(
+                    self._opening_balances
+                )
+            
+            if self._liquidity_engine is not None:
+                self._liquidity_engine.initialize(
                     self._opening_balances
                 )
 
@@ -263,9 +274,16 @@ class ReplayController:
                 f"Event {event.event_id} has an invalid transaction payload."
             )
 
+        transaction = event.payload
+
         result = self._balance_engine.apply_transaction(
-            event.payload
+            transaction
         )
+
+        if self._liquidity_engine is not None:
+            self._liquidity_engine.record_transaction(
+                transaction
+            )
 
         self._processed_transactions += 1
 
