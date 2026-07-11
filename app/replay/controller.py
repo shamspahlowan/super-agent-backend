@@ -38,6 +38,7 @@ from app.intelligence.anomaly_detection import (
 )
 
 from app.intelligence.fusion import DecisionFusionEngine
+from app.cases.service import CaseCoordinationService
 
 class ReplayControllerError(RuntimeError):
     """Base replay-controller error."""
@@ -58,6 +59,7 @@ class ReplayController:
         liquidity_engine: LiquidityForecastEngine | None = None,
         anomaly_engine: AnomalyDetectionEngine | None = None,
         fusion_engine: DecisionFusionEngine | None = None,
+        case_service: CaseCoordinationService | None = None,
         agents: list[AgentRecord] | None = None,
         context_events: list[ContextEvent] | None = None,
         recent_event_limit: int = 100,
@@ -84,6 +86,7 @@ class ReplayController:
 
         self._anomaly_engine = anomaly_engine
         self._fusion_engine = fusion_engine
+        self._case_service = case_service
         self._agents = list(agents or [])
         self._context_events = list(context_events or [])
 
@@ -96,6 +99,15 @@ class ReplayController:
             raise ReplayControllerError(
                 "Agents are required when decision fusion is enabled."
             )
+        
+        if (
+                self._case_service is not None
+                and self._fusion_engine is None
+            ):
+                raise ReplayControllerError(
+                    "Decision fusion is required when automatic "
+                    "case coordination is enabled."
+                )
 
         self._recent_events: deque[ProcessedReplayEvent] = deque(
             maxlen=recent_event_limit
@@ -127,6 +139,14 @@ class ReplayController:
             as_of=self._simulation_time,
         )
 
+        if self._case_service is not None:
+            self._case_service.sync_incidents(
+                incidents=(
+                    self._fusion_engine.get_all_incidents()
+                ),
+                as_of=self._simulation_time,
+            )
+
     def reset(self) -> ReplayState:
         with self._lock:
             self._balance_engine.initialize(
@@ -152,6 +172,9 @@ class ReplayController:
                 self._fusion_engine.initialize(
                     self._agents
                 )
+
+            if self._case_service is not None:
+                self._case_service.reset()
 
             self._current_index = 0
             self._simulation_time = self._simulation_start

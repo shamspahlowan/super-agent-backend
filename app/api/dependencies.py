@@ -13,6 +13,28 @@ from app.intelligence.anomaly_detection import (
 )
 
 from app.intelligence.fusion import DecisionFusionEngine
+from app.cases.service import CaseCoordinationService
+
+def get_case_service(
+    request: Request,
+) -> CaseCoordinationService:
+    service = getattr(
+        request.app.state,
+        "case_service",
+        None,
+    )
+
+    if service is None:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_503_SERVICE_UNAVAILABLE
+            ),
+            detail=(
+                "Case-coordination service is not initialized."
+            ),
+        )
+
+    return service
 
 def get_fusion_engine(
     request: Request,
