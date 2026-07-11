@@ -12,6 +12,7 @@ from app.db.session import engine
 from app.ledger.balance_engine import BalanceEngine
 from app.replay.controller import ReplayController
 from app.replay.loader import SyntheticDataLoader
+from app.data_quality.trust_score import FeedHealthEngine
 
 
 settings = get_settings()
@@ -38,6 +39,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     balance_engine = BalanceEngine()
 
+    feed_health_engine = FeedHealthEngine(
+    stale_minutes=settings.feed_stale_minutes,
+    missing_minutes=settings.feed_missing_minutes,
+    )
+
     replay_controller = ReplayController(
         events=replay_events,
         opening_balances=synthetic_bundle.opening_balances,
@@ -47,6 +53,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.synthetic_bundle = synthetic_bundle
     app.state.balance_engine = balance_engine
     app.state.replay_controller = replay_controller
+    app.state.feed_health_engine = feed_health_engine
 
     logger.info(
         "Replay initialized successfully: agents=%s, events=%s",

@@ -18,7 +18,7 @@ from app.schemas.replay import (
     ReplayState,
     ReplayStatus,
 )
-
+from app.data_quality.trust_score import FeedHealthEngine
 
 class ReplayControllerError(RuntimeError):
     """Base replay-controller error."""
@@ -30,11 +30,12 @@ class EmptyReplayStreamError(ReplayControllerError):
 
 class ReplayController:
     def __init__(
-        self,
+         self,
         *,
         events: list[ReplayEvent],
         opening_balances,
         balance_engine: BalanceEngine,
+        feed_health_engine: FeedHealthEngine | None = None,
         recent_event_limit: int = 100,
     ) -> None:
         if not events:
@@ -54,6 +55,7 @@ class ReplayController:
 
         self._opening_balances = list(opening_balances)
         self._balance_engine = balance_engine
+        self._feed_health_engine = feed_health_engine
 
         self._recent_events: deque[ProcessedReplayEvent] = deque(
             maxlen=recent_event_limit
@@ -81,6 +83,10 @@ class ReplayController:
             self._balance_engine.initialize(
                 self._opening_balances
             )
+            if self._feed_health_engine is not None:
+                self._feed_health_engine.initialize(
+                    self._opening_balances
+                )
 
             self._current_index = 0
             self._simulation_time = self._simulation_start
@@ -312,6 +318,24 @@ class ReplayController:
             details += (
                 ", reported_balance="
                 f"{self._format_decimal(feed_event.reported_balance)}"
+            )
+
+        if self._feed_health_engine is not None:
+            calculated_balance = (
+                self._balance_engine.get_provider_balance(
+                    feed_event.agent_id,
+                    feed_event.provider_id,
+                )
+            )
+
+            health = self._feed_health_engine.record_event(
+                feed_event,
+                calculated_balance=calculated_balance,
+            )
+
+            details += (
+                f", health_status={health.status.value}, "
+                f"confidence={health.confidence}"
             )
 
         processed = ProcessedReplayEvent(

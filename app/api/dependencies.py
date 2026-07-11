@@ -2,6 +2,7 @@ from fastapi import HTTPException, Request, status
 
 from app.ledger.balance_engine import BalanceEngine
 from app.replay.controller import ReplayController
+from app.data_quality.trust_score import FeedHealthEngine
 
 
 def get_balance_engine(
@@ -56,3 +57,21 @@ def get_replay_controller(
         )
 
     return controller
+
+
+def get_feed_health_engine(
+    request: Request,
+) -> FeedHealthEngine:
+    engine = getattr(
+        request.app.state,
+        "feed_health_engine",
+        None,
+    )
+
+    if engine is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Feed-health engine is not initialized.",
+        )
+
+    return engine
