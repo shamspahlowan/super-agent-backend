@@ -1,0 +1,371 @@
+{
+  "run_id": "DEMO-DAY-V2",
+  "seed": 20260711,
+  "generated_at": "2026-07-11T19:58:31.904904Z",
+  "synthetic_directory": "/home/shamsu-vai/SUSTMainEvent/super-agent-backend/data/synthetic_v2",
+  "ground_truth_directory": "/home/shamsu-vai/SUSTMainEvent/super-agent-backend/data/ground_truth_v2",
+  "public_invariants": [
+    {
+      "name": "ground_truth_leakage",
+      "status": "PASS",
+      "expected": "Public transaction data contains no hidden scenario fields.",
+      "observed": "No leakage detected",
+      "message": "Scenario labels remain evaluator-only."
+    },
+    {
+      "name": "unique_transaction_ids",
+      "status": "PASS",
+      "expected": "Every public transaction ID is unique.",
+      "observed": "1173 unique out of 1173",
+      "message": "Transaction IDs are unique."
+    },
+    {
+      "name": "chronological_transactions",
+      "status": "PASS",
+      "expected": "Public transactions are chronologically sorted.",
+      "observed": "Chronological",
+      "message": "Transaction stream ordering is valid."
+    },
+    {
+      "name": "ground_truth_transaction_references",
+      "status": "PASS",
+      "expected": "Every hidden transaction label references a public transaction.",
+      "observed": "All references valid",
+      "message": "Ground-truth references are valid."
+    },
+    {
+      "name": "financial_invariants",
+      "status": "PASS",
+      "expected": "Simulator reports no unexplained negative financial balances.",
+      "observed": "True",
+      "message": "Financial invariants passed."
+    }
+  ],
+  "scenario_results": [
+    {
+      "scenario_id": "S2",
+      "label": "HIDDEN_PROVIDER_SHORTAGE",
+      "agent_id": "AG002",
+      "provider_id": "BKASH",
+      "expected_detection_after": "2026-06-20T12:08:00+06:00",
+      "first_detected_at": "2026-06-20T12:04:06+06:00",
+      "detection_delay_minutes": -3.9,
+      "status": "PASS",
+      "passed": true,
+      "checks": [
+        {
+          "name": "provider_pressure_detected",
+          "status": "PASS",
+          "expected": "Provider forecast reaches WATCH, CRITICAL or DEPLETED.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        },
+        {
+          "name": "hidden_provider_shortage",
+          "status": "PASS",
+          "expected": "Shared cash remains healthier than provider e-money.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        }
+      ],
+      "observations": {
+        "provider_status": "WATCH",
+        "shared_cash_status": "SAFE",
+        "hidden_provider_shortage": true,
+        "current_provider_balance": "146700",
+        "net_depletion_per_minute": "1211.86",
+        "minutes_to_depletion": 121.05,
+        "minutes_to_safety_threshold": 104.96,
+        "confidence": 0.705
+      }
+    },
+    {
+      "scenario_id": "S3",
+      "label": "REPEATED_CASH_OUT_CLUSTER",
+      "agent_id": "AG003",
+      "provider_id": "NAGAD",
+      "expected_detection_after": "2026-06-20T13:51:00+06:00",
+      "first_detected_at": "2026-06-20T13:52:05+06:00",
+      "detection_delay_minutes": 1.08,
+      "status": "PASS",
+      "passed": true,
+      "checks": [
+        {
+          "name": "near_identical_amounts",
+          "status": "PASS",
+          "expected": "Near-identical amount factor is present.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        },
+        {
+          "name": "account_concentration",
+          "status": "PASS",
+          "expected": "Account concentration factor is present.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        },
+        {
+          "name": "human_review",
+          "status": "PASS",
+          "expected": "Assessment requires human review.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        }
+      ],
+      "observations": {
+        "score": 90,
+        "band": "HIGH",
+        "category": "REQUIRES_REVIEW",
+        "factor_codes": [
+          "ACCOUNT_CONCENTRATION",
+          "NEAR_IDENTICAL_AMOUNTS",
+          "TRANSACTION_VELOCITY",
+          "UNUSUAL_AMOUNT_LEVEL"
+        ],
+        "transaction_count": 23,
+        "unique_accounts": 10,
+        "repeated_amount_ratio": 0.652,
+        "dominant_account_ratio": 0.217
+      }
+    },
+    {
+      "scenario_id": "S4",
+      "label": "FEED_DELAY_RECOVERY",
+      "agent_id": "AG005",
+      "provider_id": "ROCKET",
+      "expected_detection_after": "2026-06-20T13:15:00+06:00",
+      "first_detected_at": "2026-06-20T13:00:00+06:00",
+      "detection_delay_minutes": -15.0,
+      "status": "PASS",
+      "passed": true,
+      "checks": [
+        {
+          "name": "feed_degradation",
+          "status": "PASS",
+          "expected": "Feed becomes STALE or MISSING.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        },
+        {
+          "name": "feed_recovery",
+          "status": "PASS",
+          "expected": "Feed returns to HEALTHY after recovery.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        }
+      ],
+      "observations": {
+        "latest_status": "HEALTHY",
+        "latest_confidence": 0.889,
+        "data_age_minutes": 8.33
+      }
+    },
+    {
+      "scenario_id": "S5",
+      "label": "LEGITIMATE_DEMAND_SPIKE",
+      "agent_id": "AG004",
+      "provider_id": null,
+      "expected_detection_after": "2026-06-20T14:38:00+06:00",
+      "first_detected_at": null,
+      "detection_delay_minutes": null,
+      "status": "PASS",
+      "passed": true,
+      "checks": [
+        {
+          "name": "no_false_positive",
+          "status": "PASS",
+          "expected": "Known broad demand spike does not require risk review.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        },
+        {
+          "name": "context_category",
+          "status": "PASS",
+          "expected": "Final category is LEGITIMATE_DEMAND_SPIKE.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        }
+      ],
+      "observations": {
+        "evaluation_time": "2026-06-20T14:59:35+06:00",
+        "score": 0,
+        "band": "LOW",
+        "category": "LEGITIMATE_DEMAND_SPIKE",
+        "requires_human_review": false,
+        "active_contexts": [
+          "EID_MARKET_SURGE"
+        ],
+        "unique_accounts": 35,
+        "unique_providers": 3,
+        "final_evaluation_time": "2026-06-20T15:00:00+06:00",
+        "final_score": 0,
+        "final_band": "LOW",
+        "final_category": "LEGITIMATE_DEMAND_SPIKE"
+      }
+    },
+    {
+      "scenario_id": "S6",
+      "label": "BALANCE_CONFLICT",
+      "agent_id": "AG006",
+      "provider_id": "BKASH",
+      "expected_detection_after": "2026-06-20T15:20:00+06:00",
+      "first_detected_at": "2026-06-20T15:20:58+06:00",
+      "detection_delay_minutes": 0.97,
+      "status": "PASS",
+      "passed": true,
+      "checks": [
+        {
+          "name": "balance_conflict",
+          "status": "PASS",
+          "expected": "Feed health becomes CONFLICTING.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        }
+      ],
+      "observations": {
+        "latest_status": "CONFLICTING",
+        "reported_balance": "225000",
+        "calculated_balance": "190650",
+        "balance_difference": "34350"
+      }
+    },
+    {
+      "scenario_id": "S7",
+      "label": "CROSS_PROVIDER_LINKED_ACTIVITY",
+      "agent_id": "AG001",
+      "provider_id": null,
+      "expected_detection_after": "2026-06-20T16:06:00+06:00",
+      "first_detected_at": "2026-06-20T16:02:30+06:00",
+      "detection_delay_minutes": -3.5,
+      "status": "PASS",
+      "passed": true,
+      "checks": [
+        {
+          "name": "cross_provider_link",
+          "status": "PASS",
+          "expected": "Cross-provider linked-account factor requires review.",
+          "observed": "Observed",
+          "message": "Validation condition passed."
+        }
+      ],
+      "observations": {
+        "score": 55,
+        "band": "MEDIUM",
+        "category": "CROSS_PROVIDER_REVIEW",
+        "provider_scope": [
+          "BKASH",
+          "NAGAD",
+          "ROCKET"
+        ],
+        "factor_codes": [
+          "CROSS_PROVIDER_LINK",
+          "TRANSACTION_VELOCITY"
+        ],
+        "transaction_count": 14,
+        "unique_providers": 3,
+        "unique_accounts": 10
+      }
+    }
+  ],
+  "metrics": [
+    {
+      "name": "anomaly_precision",
+      "value": 1.0,
+      "unit": "ratio",
+      "target": ">= 0.8",
+      "status": "PASS",
+      "passed": true,
+      "description": "Share of anomaly review detections that correspond to injected positive scenarios."
+    },
+    {
+      "name": "anomaly_recall",
+      "value": 1.0,
+      "unit": "ratio",
+      "target": ">= 0.8",
+      "status": "PASS",
+      "passed": true,
+      "description": "Share of injected anomaly scenarios detected."
+    },
+    {
+      "name": "hard_negative_false_positive_rate",
+      "value": 0.0,
+      "unit": "ratio",
+      "target": "<= 0.2",
+      "status": "PASS",
+      "passed": true,
+      "description": "False-review rate for the legitimate Eid-demand hard negative."
+    },
+    {
+      "name": "data_quality_detection_coverage",
+      "value": 1.0,
+      "unit": "ratio",
+      "target": ">= 1.0",
+      "status": "PASS",
+      "passed": true,
+      "description": "Coverage of feed-delay/recovery and balance-conflict scenarios."
+    },
+    {
+      "name": "liquidity_detection_coverage",
+      "value": 1.0,
+      "unit": "ratio",
+      "target": ">= 1.0",
+      "status": "PASS",
+      "passed": true,
+      "description": "Detection coverage for hidden provider shortage."
+    },
+    {
+      "name": "shortage_lead_time",
+      "value": 121.05,
+      "unit": "minutes",
+      "target": "> 0 minutes",
+      "status": "PASS",
+      "passed": true,
+      "description": "Projected time remaining until provider e-money depletion at first detected pressure."
+    },
+    {
+      "name": "incident_explanation_coverage",
+      "value": 1.0,
+      "unit": "ratio",
+      "target": ">= 0.95",
+      "status": "PASS",
+      "passed": true,
+      "description": "Incidents containing evidence, uncertainty and a safe recommended next step."
+    },
+    {
+      "name": "incident_case_coverage",
+      "value": 1.0,
+      "unit": "ratio",
+      "target": ">= 0.95",
+      "status": "PASS",
+      "passed": true,
+      "description": "Share of generated incidents linked to traceable coordination cases."
+    },
+    {
+      "name": "average_event_processing_latency",
+      "value": 3.271,
+      "unit": "milliseconds",
+      "target": "Informational",
+      "status": "PASS",
+      "passed": true,
+      "description": "Average complete pipeline processing time per replayed event."
+    },
+    {
+      "name": "p95_event_processing_latency",
+      "value": 4.521,
+      "unit": "milliseconds",
+      "target": "<= 250.0",
+      "status": "PASS",
+      "passed": true,
+      "description": "95th-percentile complete pipeline processing time per replayed event."
+    }
+  ],
+  "total_replay_events": 2144,
+  "replay_duration_seconds": 8.2312,
+  "overall_status": "PASS",
+  "overall_passed": true,
+  "notes": [
+    "Hidden scenario labels were loaded only by the evaluator after public event ingestion.",
+    "No scenario_id was provided to the balance, forecast, anomaly, fusion or case engines.",
+    "Risk outputs remain advisory and do not perform financial actions."
+  ]
+}

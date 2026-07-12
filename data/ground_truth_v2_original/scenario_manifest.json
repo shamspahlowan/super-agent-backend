@@ -1,0 +1,94 @@
+{
+  "agents": 6,
+  "context_events": 1,
+  "end_time": "2026-06-20T18:00:00+06:00",
+  "ended_at": "2026-06-20T18:00:00+06:00",
+  "exported_files": {
+    "ground_truth": [
+      "transaction_failures.csv",
+      "scenario_labels.csv",
+      "scenario_manifest.json"
+    ],
+    "public": [
+      "agents.csv",
+      "opening_balances.csv",
+      "transactions.csv",
+      "feed_events.csv",
+      "context_events.csv"
+    ]
+  },
+  "failure_reason_counts": {
+    "INSUFFICIENT_PROVIDER_EMONEY": 3,
+    "INSUFFICIENT_SHARED_CASH": 32,
+    "SIMULATED_NETWORK_ERROR": 15
+  },
+  "feed_event_counts": {
+    "BALANCE_CONFLICT": 1,
+    "FEED_DELAY": 1,
+    "FEED_RECOVERED": 1,
+    "HEARTBEAT": 968
+  },
+  "feed_events": 971,
+  "final_state": {
+    "provider_emoney": {
+      "AG001:BKASH": "241600",
+      "AG001:NAGAD": "272350",
+      "AG001:ROCKET": "24200",
+      "AG002:BKASH": "51200",
+      "AG002:NAGAD": "96450",
+      "AG002:ROCKET": "77550",
+      "AG003:BKASH": "216450",
+      "AG003:NAGAD": "357830",
+      "AG003:ROCKET": "77950",
+      "AG004:BKASH": "208500",
+      "AG004:NAGAD": "197650",
+      "AG004:ROCKET": "181000",
+      "AG005:BKASH": "192250",
+      "AG005:NAGAD": "214950",
+      "AG005:ROCKET": "105400",
+      "AG006:BKASH": "186350",
+      "AG006:NAGAD": "135000",
+      "AG006:ROCKET": "97300"
+    },
+    "shared_cash": {
+      "AG001": "121850",
+      "AG002": "324800",
+      "AG003": "52770",
+      "AG004": "17850",
+      "AG005": "2400",
+      "AG006": "164350"
+    }
+  },
+  "financial_invariants_passed": true,
+  "ground_truth_directory": "data/ground_truth_v2",
+  "ground_truth_labels": 158,
+  "ground_truth_leaked_to_transactions": false,
+  "provider_counts": {
+    "BKASH": 586,
+    "NAGAD": 388,
+    "ROCKET": 199
+  },
+  "providers": 3,
+  "public_data_directory": "data/synthetic_v2",
+  "run_id": "DEMO-DAY-V2",
+  "scenario_plugins": [
+    "S2",
+    "S3",
+    "S5",
+    "S7",
+    "S4",
+    "S6"
+  ],
+  "seed": 20260711,
+  "start_time": "2026-06-20T09:00:00+06:00",
+  "started_at": "2026-06-20T09:00:00+06:00",
+  "status_counts": {
+    "FAILED": 50,
+    "SUCCESS": 1123
+  },
+  "transaction_type_counts": {
+    "CASH_IN": 470,
+    "CASH_OUT": 703
+  },
+  "transactions": 1173
+}
